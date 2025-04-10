@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Formula Viewer</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      text-align: center;
+    }
+  
+    #formula-img,
+    .formula-full {
+      max-width: 90%;
+      margin: 2rem auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      display: block;
+    }
+  
+    input {
+      font-size: 1.2rem;
+      padding: 0.5rem;
+      width: 200px;
+    }
+  
+    button {
+      font-size: 1.2rem;
+      padding: 0.5rem 1rem;
+      margin-left: 10px;
+    }
+  </style>
+  
+  
+</head>
+<body>
+  <p style="text-align: right;">Repository on <a href="">GitHub</a></p>
+
+  <p style="color: red;">Work In Progress - Still need to clip and label rest of formulas</p>
+
+  <h1>A Modern Approach to Quantum Mechanics by Townsend (2nd Edition) - Formula Viewer</h1>
+  <p>
+    [Ch.1 Formulas: 1.1 - 1.50], [Ch.2 Formulas: 2.1 - 2.150], [Ch.12 Formulas: 12.1 - 12.73], CONTINUE FOR REST
+  </p>
+  <p>Enter formula number (e.g., <code>1.2</code> for Chapter 1, Equation 2)</p>
+  
+  <input type="text" id="formula-input" placeholder="e.g., 2.5">
+  <button onclick="showFormula()">Show</button>
+  <button onclick="showAllFormulas()">Show All Formulas</button>
+  <p>Enter chapter number to view all formulas from that chapter</p>
+  <input type="text" id="chapter-input" placeholder="e.g., 1">
+  <button onclick="showChapterFormulas()">Show Chapter Formulas</button>
+  <p>Or choose a random equation</p>
+  <button onclick="showRandomFormula()">Random Formula</button>
+
+
+  <div id="image-container">
+    <img id="formula-img" src="" alt="" style="display: none;">
+    <p id="error-msg" style="color: red;"></p>
+  </div>
+  <div id="all-formulas" style="margin-top: 2rem;"></div>
+
+
+  <script>
+    function showFormula() {
+      const input = document.getElementById("formula-input").value.trim();
+      const img = document.getElementById("formula-img");
+      const error = document.getElementById("error-msg");
+      
+      const match = input.match(/^(\d+)[\.\-_, ]?(\d+)$/);
+      if (!match) {
+        error.textContent = "Please enter in format like 1.2";
+        img.style.display = "none";
+        return;
+      }
+
+      const ch = match[1];
+      const eqn = match[2];
+      const filename = `formulas/${ch}_${eqn}.png`;
+
+      img.src = filename;
+      img.alt = `Chapter ${ch}, Equation ${eqn}`;
+      img.style.display = "block";
+      error.textContent = "";
+    }
+
+    function showAllFormulas() {
+        const container = document.getElementById("all-formulas");
+        container.innerHTML = ""; // clear previous
+
+        const chapters = 12;
+        const equationsPerChapter = 200; // adjust if needed
+
+        for (let ch = 1; ch <= chapters; ch++) {
+            for (let eq = 1; eq <= equationsPerChapter; eq++) {
+            const img = document.createElement("img");
+            const filenameBase = `formulas/${ch}_${eq}`;
+            img.src = `${filenameBase}.png`;
+            img.alt = `Formula ${ch}.${eq}`;
+            img.className = "formula-full";  // use full display style
+
+            img.onerror = () => {
+                img.onerror = () => img.remove();
+                img.src = `${filenameBase}.jpg`;
+            };
+
+            container.appendChild(img);
+            }
+        }
+    }
+
+    function showChapterFormulas() {
+  const chInput = document.getElementById("chapter-input").value.trim();
+  const container = document.getElementById("all-formulas");
+  container.innerHTML = "";
+
+  if (!chInput.match(/^\d+$/)) {
+    container.innerHTML = "<p style='color:red;'>Enter a valid chapter number</p>";
+    return;
+  }
+
+  const ch = parseInt(chInput);
+  const maxEquations = 200; // adjust if needed
+
+  for (let eq = 1; eq <= maxEquations; eq++) {
+    const id = `${ch}_${eq}`;
+    const img = document.createElement("img");
+    img.src = `formulas/${id}.png`;
+    img.alt = `Formula ${ch}.${eq}`;
+    img.className = "formula-full";
+
+    img.onerror = () => {
+      img.onerror = () => img.remove();
+      img.src = `formulas/${id}.jpg`;
+    };
+
+    container.appendChild(img);
+  }
+}
+
+function showRandomFormula() {
+  const img = document.getElementById("formula-img");
+  const error = document.getElementById("error-msg");
+
+  const formulaCountsByChapter = {
+    1: 50,
+    2: 150,
+  };
+
+  // Pick a random chapter
+  const chapters = Object.keys(formulaCountsByChapter);
+  const ch = chapters[Math.floor(Math.random() * chapters.length)];
+  const maxEq = formulaCountsByChapter[ch];
+
+  // Pick a random equation from that chapter
+  const eq = Math.floor(Math.random() * maxEq) + 1;
+  const id = `${ch}_${eq}`;
+
+  // Load PNG first, fallback to JPG
+  img.src = `formulas/${id}.png`;
+  img.alt = `Formula ${ch}.${eq}`;
+  img.style.display = "block";
+  error.textContent = "";
+  document.getElementById("formula-input").value = `${ch}.${eq}`;
+
+  img.onerror = () => {
+    img.onerror = () => {
+      error.textContent = `Formula ${ch}.${eq} not found.`;
+      img.style.display = "none";
+    };
+    img.src = `formulas/${id}.jpg`;
+  };
+}
+
+
+  </script>
+
+</body>
+</html>

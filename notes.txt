@@ -1,0 +1,9 @@
+pipeline
+- screenshot and label the formulas from the textbook
+- script that automates the label
+- place the screenshots in the screenshots folder, then run 
+  the python program from that folder
+- move the renamed pics to the formulas folder
+- html and js webapp that utilizes the formula screenshots 
+  by displaying the formula pic when formula identifier is
+  typed into webapp
