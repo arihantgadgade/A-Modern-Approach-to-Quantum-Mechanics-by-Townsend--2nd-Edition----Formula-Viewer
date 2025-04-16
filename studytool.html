@@ -42,7 +42,7 @@
   <h1>A Modern Approach to Quantum Mechanics by Townsend (2nd Edition) - Formula Viewer</h1>
   <p>
     [Ch.1 Formulas: 1.1 - 1.50], [Ch.2 Formulas: 2.1 - 2.150], [Ch.3 Formulas: 3.1 - 3.130],
-    [Ch.12 Formulas: 12.1 - 12.73], CONTINUE FOR REST
+    [Ch.12 Formulas: 12.1 - 12.73], [Ch.13 Formulas: 13.1 - 13.112], CONTINUE FOR REST
   </p>
   <p>Enter formula number (e.g., <code>1.2</code> for Chapter 1, Equation 2) (ignore lettering, i.e. 1.5 not 1.5a or 1.5b)</p>
   
@@ -90,7 +90,7 @@
         const container = document.getElementById("all-formulas");
         container.innerHTML = ""; // clear previous
 
-        const chapters = 12;
+        const chapters = 13;
         const equationsPerChapter = 200; // adjust if needed
 
         for (let ch = 1; ch <= chapters; ch++) {
@@ -148,7 +148,8 @@ function showRandomFormula() {
     1: 50,
     2: 150,
     3: 130,
-    12: 73
+    12: 73,
+    13: 112
   };
 
   // Pick a random chapter
